@@ -1,6 +1,9 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 const port = 5000;
@@ -8,9 +11,10 @@ const port = 5000;
 // Enable CORS for all origins
 app.use(cors());
 
+const keyId = process.env.keyId;
+const keySecret = process.env.keySecret;
+
 app.get("/payment-links", async (req, res) => {
-  const keyId = "rzp_test_e664V0FP0zQy7N";
-  const keySecret = "QdnuRxUHrPGeiJc9lDTXYPO7";
   const authHeader = `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString(
     "base64"
   )}`;
@@ -26,7 +30,7 @@ app.get("/payment-links", async (req, res) => {
     );
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
